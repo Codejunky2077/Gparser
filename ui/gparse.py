@@ -1,9 +1,10 @@
 # ui/app.py
 import streamlit as st
-import tempfile, os
-from cleaner import clean_fasta_stream
+import tempfile
+from PIL import Image
+from cleaner import clean_fasta
 
-st.set_page_config(page_title="Gparser🧬", layout="wide")
+st.set_page_config(page_title="Gparser🧬",page_icon=Image.open("dna.png"),layout="centered")
 st.title("Gparser🧬 -FASTA Cleaner")
 
 uploaded = st.file_uploader("Upload FASTA (fa / fasta / gz)", type=["fa","fasta","gz","fa.gz","txt"])
@@ -16,14 +17,13 @@ if uploaded is not None:
     tmp_in.write(uploaded.getbuffer())
     tmp_in.flush()
 
-    st.write("File saved for processing:", tmp_in.name)
     run = st.button("Start cleaning")
 
     if run:
         tmp_out = tempfile.NamedTemporaryFile(delete=False, suffix=".clean.fasta")
         tmp_csv = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
         with st.spinner("Cleaning... (this may take time for large files)"):
-            counters = clean_fasta_stream(
+            counters = clean_fasta(
                 input_path=tmp_in.name,
                 out_fasta=tmp_out.name,
                 summary_csv=tmp_csv.name,
@@ -38,5 +38,4 @@ if uploaded is not None:
         with open(tmp_csv.name, "rb") as f:
             st.download_button("Download summary CSV", data=f, file_name="summary.csv")
 
-        # optional cleanup
-        # os.remove(tmp_in.name)
+

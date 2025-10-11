@@ -1,6 +1,6 @@
 
 import argparse
-from cleaner import clean_fasta_stream
+from ui.cleaner import clean_fasta_stream
 
 def main():
     p = argparse.ArgumentParser()

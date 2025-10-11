@@ -20,7 +20,7 @@ def gc_pct(seq: str) -> float:
 def normalize_seq(seq: str) -> str:
     return seq.upper().replace('U','T')
 
-def clean_fasta_stream(
+def clean_fasta(
     input_path: str,
     out_fasta: str,
     summary_csv: str,
