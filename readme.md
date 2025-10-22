@@ -7,6 +7,7 @@ This project is aim to achieve genome parser abilities like :- <br>
 <br><br>
 
 Gparser is expert in:-<br>
+<img src="https://cdn-useast1.kapwing.com/static/templates/3-spiderman-pointing-meme-template-full-ca8f27e0.webp?raw=true">
 1. Deduplication it removes redundancy from codons and make it easy to study.<br>
 2. It removes Nitrogen base pairs from noisy genomic data efficiently.<br>
 3. It gives GC content information in files and other scientific clues which are required for study.<br>
