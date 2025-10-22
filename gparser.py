@@ -2,7 +2,7 @@
 import streamlit as st
 import tempfile
 from PIL import Image
-from cleaner import clean_fasta
+from cleaner_init_ import clean_fasta
 #page tab setup
 st.set_page_config(page_title="Gparser",page_icon=Image.open("dna.png"),layout="centered")
 #page UI cosmetic config
