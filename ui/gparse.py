@@ -3,14 +3,22 @@ import streamlit as st
 import tempfile
 from PIL import Image
 from cleaner import clean_fasta
-
+#page tab setup
 st.set_page_config(page_title="Gparser🧬",page_icon=Image.open("dna.png"),layout="centered")
-st.title("Gparser🧬 -FASTA Cleaner")
+#page UI cosmetic config
+st.markdown(f"""
+img src="https://github.com/Codejunky2077/Gparser/blob/main/ui/dna.png" width="48" style="margin-right:10px; vertical-align: middle;" />
+            """,unsafe_allow_html=True)
 
-uploaded = st.file_uploader("Upload FASTA (fa / fasta / gz)", type=["fa","fasta","gz","fa.gz","txt"])
-min_len = st.number_input("Minimum sequence length", value=200, step=10)
-max_n = st.slider("Max fraction of Ns allowed", min_value=0.0, max_value=0.5, value=0.05, step=0.01)
-dedup = st.checkbox("Enable deduplication", value=True)
+
+
+
+
+#page ui procedure config
+uploaded = st.file_uploader("Upload FASTA (fa / fasta / gz)", type=["fa","fasta","gz","fa.gz","txt"],help="Upload your GENOME file here for cleaning.")
+min_len = st.number_input("Minimum sequence length", value=100, step=10,help="Sequences shorter than this will be removed")
+max_n = st.slider("Max fraction of Ns allowed", min_value=0.0, max_value=0.5, value=0.05, step=0.01,help="Sequences with a higher fraction of 'N' bases will be removed")
+dedup = st.checkbox("Enable deduplication", value=True,help="Remove duplicate sequences from the FASTA")
 
 if uploaded is not None:
     tmp_in = tempfile.NamedTemporaryFile(delete=False, suffix=".fasta")
@@ -22,7 +30,7 @@ if uploaded is not None:
     if run:
         tmp_out = tempfile.NamedTemporaryFile(delete=False, suffix=".clean.fasta")
         tmp_csv = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
-        with st.spinner("Cleaning... (this may take time for large files)"):
+        with st.spinner("Cleaning... please wait..."):
             counters = clean_fasta(
                 input_path=tmp_in.name,
                 out_fasta=tmp_out.name,
