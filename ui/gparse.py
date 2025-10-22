@@ -7,7 +7,9 @@ from cleaner import clean_fasta
 st.set_page_config(page_title="Gparser🧬",page_icon=Image.open("dna.png"),layout="centered")
 #page UI cosmetic config
 st.markdown(f"""
-img src="https://github.com/Codejunky2077/Gparser/blob/main/ui/dna.png" width="48" style="margin-right:10px; vertical-align: middle;" />
+            <img src="https://github.com/Codejunky2077/Gparser/blob/022317ba401641adf54177ab5a586835f689afd9/ui/dna.png?raw=true" width="100" style="margin-left:150px;margin-right:10px;margin-bottom:45px; vertical-align: middle;" />
+            <span style="font-style:Fjalla One;font-size: 80px; font-weight: 300;">Gparser</span>
+            <br><br>
             """,unsafe_allow_html=True)
 
 
