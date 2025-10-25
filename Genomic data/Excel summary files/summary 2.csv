@@ -1,0 +1,8 @@
+id,length,gc_pct,n_count,md5,status
+seq1,36,50.0,0,cf11051759161db6cdcfcb2bb271824d,kept
+seq2,42,7.14,36,2a85b97b1447b11c6a78b197c9daa527,high_Ns
+seq3,26,30.77,0,ed7c863c5f4c39a92eaf2324a3b1e01a,kept
+seq4,36,50.0,0,cf11051759161db6cdcfcb2bb271824d,duplicate
+seq5,36,0.0,36,0b957bb04a89c8934e3f97853bc91a66,high_Ns
+short,4,50.0,0,2af651ad6e4063caae6ad7712c77d523,too_short
+ambiguous,16,12.5,1,b60aab8161891a20a9c70e52b8775311,too_short
