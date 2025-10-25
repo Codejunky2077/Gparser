@@ -44,18 +44,33 @@ if uploaded is not None:
                 dedup=dedup
             )
         st.success("Cleaning finished✅")
-         # Display final metrics
-        col1, col2, col3, col4, col5, col6 = st.columns(6)
-        total_metric = col1.metric("Total", counters["total"])
-        kept_metric = col2.metric("Kept", counters["kept"])
-        short_metric = col3.metric("Too Short", counters["too_short"])
-        n_base_metric = col4.metric("High Ns", counters["high_Ns"])
-        invalid_metric = col5.metric("Invalid codons", counters["non_allowed"])
-        duplicate_metric = col6.metric("Duplicates", counters["duplicate"])
+
+
+        #saves file path and counters
+        st.session_state["counters"]=counters
+        st.session_state["out_fasta"]=tmp_out.name
+        st.session_state["summary_csv"]=tmp_csv.name
+
+if "counters" in st.session_state:
+            counters = st.session_state["counters"]
+
+            col1, col2, col3, col4, col5, col6 = st.columns(6)
+            col1.metric("Total", counters["total"])
+            col2.metric("Kept", counters["kept"])
+            col3.metric("Too Short", counters["too_short"])
+            col4.metric("High Ns", counters["high_Ns"])
+            col5.metric("Invalid codons", counters["non_allowed"])
+            col6.metric("Duplicates", counters["duplicate"])
+
+            # Download buttons 
+            with open(st.session_state["out_fasta"], "rb") as f:
+                st.download_button("Download cleaned file", data=f, file_name="cleaned.fasta")
+
+            with open(st.session_state["summary_csv"], "rb") as f:
+                st.download_button("Download summary CSV", data=f, file_name="summary.csv")
+
+
+
+
+
         
-        with open(tmp_out.name, "rb") as f:
-            st.download_button("Download cleaned file", data=f, file_name="cleaned.fasta")
-        with open(tmp_csv.name, "rb") as f:
-            st.download_button("Download summary CSV", data=f, file_name="summary.csv")
-
-
