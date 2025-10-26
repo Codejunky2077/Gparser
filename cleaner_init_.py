@@ -1,3 +1,4 @@
+#getting necessary imports for the cleaning function
 from Bio import SeqIO
 import streamlit as st
 import hashlib
@@ -7,8 +8,10 @@ import os
 import gzip
 from typing import Optional, Dict, TextIO
 
+#only allowed characters in sequences given by user
 ALLOWED_CHARS = set("ACGTN")
 
+#function to calculate GC percentage
 def gc_pct(seq: str) -> float:
     """Return GC percentage of a sequence."""
     s = seq.upper().replace('U', 'T')
@@ -18,9 +21,12 @@ def gc_pct(seq: str) -> float:
     c = s.count('C')
     return round(100.0 * (g + c) / len(s), 2)
 
+#function to normalize sequences into DNA form
 def normalize_seq(seq: str) -> str:
-    """Uppercase and replace U with T."""
+    """Convert RNA to DNA and uppercase."""
     return seq.upper().replace('U', 'T')
+
+#function to open fasta files, whether gzipped(genebank format) or not.
 
 def open_fasta_maybe_gz(path: str) -> TextIO:
     """Open compressed or regular FASTA."""
@@ -28,6 +34,7 @@ def open_fasta_maybe_gz(path: str) -> TextIO:
         return gzip.open(path, "rt")
     return open(path, "r")
 
+#main cleaning function
 def clean_fasta(
     input_path: str,
     out_fasta: str,
@@ -46,9 +53,10 @@ def clean_fasta(
             conn = sqlite3.connect(dedup_db_path)
             conn.execute("CREATE TABLE IF NOT EXISTS seq_hash(h TEXT PRIMARY KEY)")
             conn.commit()
-
+            #setting the counters variables to zero
     total = kept = too_short = high_Ns = non_allowed = duplicate = 0
 
+    #function to record status of each sequence in the summary csv
     def record_status(rec_id, seq, md5, status):
         writer.writerow([
             rec_id,
@@ -58,11 +66,11 @@ def clean_fasta(
             md5,
             status
         ])
-
+        # Flush to ensure data is written immediately reducing risk of data loss
     with open(out_fasta, "w") as outf, open(summary_csv, "w", newline="") as csvf:
         writer = csv.writer(csvf)
         writer.writerow(["id", "length", "gc_pct", "n_count", "md5", "status"])
-
+        #processing each sequence record in the input fasta file
         with open_fasta_maybe_gz(input_path) as handle:
             for rec in SeqIO.parse(handle, "fasta"):
                 total += 1
@@ -161,7 +169,7 @@ def clean_fasta(
                         "non_allowed": non_allowed,
                         "duplicate": duplicate
                     })
-
+    # Cleanup
     if conn:
         conn.close()
     if dedup_db_path is None:
@@ -169,7 +177,7 @@ def clean_fasta(
             os.remove(dedup_db_path)
         except:
             pass
-
+    #returning the counters dictionary to show status in the main app ui
     return {
         "total": total,
         "kept": kept,

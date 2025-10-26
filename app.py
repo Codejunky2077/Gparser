@@ -3,9 +3,11 @@ import streamlit as st
 import tempfile
 from PIL import Image
 from cleaner_init_ import clean_fasta
-#page tab setup
+#page tile setup
 st.set_page_config(page_title="Gparser",page_icon=Image.open("dna.png"),layout="wide")
+
 #page UI cosmetic config
+#giving name to webapp and sizing it with help of htlm and css codes
 st.markdown(f"""
             <img src="https://github.com/Codejunky2077/Gparser/blob/022317ba401641adf54177ab5a586835f689afd9/ui/dna.png?raw=true" width="80" style="margin-right:10px;margin-bottom:45px; vertical-align: middle;" />
             <span style="font-style:Fjalla One;font-size: 80px; font-weight: 400">Gparser</span>
@@ -18,12 +20,14 @@ st.markdown(f"""
 
 
 
-#page ui procedure config
+#Here starts the main app frontend interface asking and processing user inputs and their files 
+
 uploaded = st.file_uploader("Upload File for parsing", type=["fa","fasta","gz","fa.gz","txt"],help="Upload your GENOME file here for cleaning.")
 min_len = st.number_input("Minimum sequence length", value=100, step=10,help="Sequences shorter than this will be removed")
 max_n = st.slider("Max fraction of N allowed", min_value=0.0, max_value=0.5, value=0.05, step=0.01,help="Sequences with a higher fraction of 'N' bases will be removed")
 dedup = st.checkbox("Enable deduplication", value=True,help="Remove duplicate sequences from the FASTA")
 
+#processing uploaded file and running cleaning function
 if uploaded is not None:
     tmp_in = tempfile.NamedTemporaryFile(delete=False, suffix=".fasta")
     tmp_in.write(uploaded.getbuffer())
@@ -46,11 +50,12 @@ if uploaded is not None:
         st.success("Cleaning finished✅")
 
 
-        #saves file path and counters
+        #saves file path and counters recording data of what happenend and also keeping file safe for download
         st.session_state["counters"]=counters
         st.session_state["out_fasta"]=tmp_out.name
         st.session_state["summary_csv"]=tmp_csv.name
 
+#displaying results of what happened during cleaning and providing priliminary status
 if "counters" in st.session_state:
             counters = st.session_state["counters"]
 
@@ -62,7 +67,8 @@ if "counters" in st.session_state:
             col5.metric("Invalid codons", counters["non_allowed"])
             col6.metric("Duplicates", counters["duplicate"])
 
-            # Download buttons 
+            # Download buttons for cleaned fasta and summary csv EXCEL file
+            
             with open(st.session_state["out_fasta"], "rb") as f:
                 st.download_button("Download cleaned file", data=f, file_name="cleaned.fasta")
 
